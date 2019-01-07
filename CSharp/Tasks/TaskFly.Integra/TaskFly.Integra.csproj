@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Carlos dos Santos</Authors>
+    <Company>CDS Informatica</Company>
+    <Product>TaskFly</Product>
+    <Description>API for TaskFly</Description>
+    <Copyright>2018 CDS Informática Ltda.</Copyright>
+    <PackageProjectUrl>https://www.gotaskfly.com</PackageProjectUrl>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/40304862?s=400&amp;u=dd2dbe7b6250d09606b45dc897564fd95c4693d3&amp;v=4</PackageIconUrl>
+    <RepositoryUrl>https://www.github.com/taskfly</RepositoryUrl>
+    <PackageTags>task;manager</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+</Project>

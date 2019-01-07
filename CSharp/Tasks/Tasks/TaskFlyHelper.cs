@@ -14,6 +14,7 @@ namespace TaskFly.Integra
     {
         private string apiURL = "https://integra.gotaskfly.com/api/v1";
         private string apiToken;
+        public string Message = "";
 
         public TaskFlyHelper(string token)
         {
@@ -31,6 +32,7 @@ namespace TaskFly.Integra
 
         private T CallService<T>(string method)
         {
+            Message = "";
             using (var client = GetHttpClientToken())
             {
                 var url = apiURL + method;
@@ -43,34 +45,80 @@ namespace TaskFly.Integra
             }
         }
 
-        private void ServicePut(string method, object data)
+        private int SendToService(string httpVerb, string urlMethod, object data)
         {
+            int ID = 0;
+            Message = "";
             using (var client = GetHttpClientToken())
             {
                 HttpResponseMessage responsebody;
-                var url = apiURL + method;
+                var url = apiURL + urlMethod;
+                HttpContent httpContent;
                 if (data != null)
                 {
                     var content = JsonConvert.SerializeObject(data);
                     var buffer = Encoding.UTF8.GetBytes(content);
                     var byteContent = new ByteArrayContent(buffer);
                     byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    var response = client.PutAsync(url, byteContent);
-                    responsebody = response.Result;
+                    httpContent = byteContent;
                 }
                 else
                 {
                     var content = new StringContent("");
                     content.Headers.ContentType = null;
-                    var response = client.PutAsync(url, content);
-                    responsebody = response.Result;
+                    httpContent = content;
+                }
+                Task<HttpResponseMessage> response = null;
+                switch (httpVerb)
+                {
+                    case "POST":
+                        {
+                            response = client.PostAsync(url, httpContent);
+                            break;
+                        }
+                    case "PUT":
+                        {
+                            response = client.PutAsync(url, httpContent);
+                            break;
+                        }
+                    case "DELETE":
+                        {
+                            response = client.DeleteAsync(url);
+                            break;
+                        }
+                }
+                responsebody = response.Result;
+                string result = (responsebody.Content.ReadAsStringAsync().Result);
+                if (result == "")
+                {
+                    Message = responsebody.StatusCode.ToString();
+                }
+                if(result.Contains("Message"))
+                {
+                    var newType = new { Message = "" };
+                    var obj = JsonConvert.DeserializeAnonymousType(result, newType);
+                    Message = obj.Message;
+                }
+                if (httpVerb == "POST")
+                {
+                    var newType = new { ID = 0 };
+                    var obj = JsonConvert.DeserializeAnonymousType(result, newType);
+                    ID = obj.ID;
+                    Message = "OK";
                 }
             }
+            return ID;
         }
 
         public List<Customers> GetCustomers() => CallService<List<Customers>>("/customers");
         public Customers GetCustomerByID(int id) => CallService<Customers>("/customers/" + id);
+        public int AddCustomer(Customers customer) => SendToService("POST","/customers",customer);
+        public void ChangeCustomer(Customers customer) => SendToService("PUT", $"/customers/{customer.Id}", customer);
+        public void DeleteCustomer(int ID) => SendToService("DELETE", $"/customers/{ID}", null);
         public List<Projects> GetProjects() => CallService<List<Projects>>("/projects");
+        public int AddProject(Projects project) => SendToService("POST", "/projects", project);
+        public void ChangeProject(Projects project) => SendToService("POST", $"/projects/{project.Id}", project);
+        public void DeleteProject(int ID) => SendToService("DELETE", $"/projects/{ID}", null);
         public List<Sectors> GetSectors() => CallService<List<Sectors>>("/sectors");
         public List<TaskPhases> GetTaskPhases() => CallService<List<TaskPhases>>("/taskphases");
         public List<TaskPriority> GetTaskPriority() => CallService<List<TaskPriority>>("/taskpriorities");
@@ -90,7 +138,7 @@ namespace TaskFly.Integra
 
         public void TransferTask(int taskId, int newUserId)
         {
-            ServicePut($"/tasks/{taskId}/transfer/{newUserId}",null);
+            SendToService("PUT",$"/tasks/{taskId}/transfer/{newUserId}",null);
         }
 
 

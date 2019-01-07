@@ -18,5 +18,8 @@ namespace TaskFly.Entities
         public string City { get; set; }
         public string UF { get; set; }
         public object Contact { get; set; }
+        public string ServiceDeskLogin { get; set; }
+        public string ServiceDeskPassword { get; set; }
+        public bool Active { get; set; }
     }
 }
