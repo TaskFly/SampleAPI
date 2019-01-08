@@ -152,7 +152,5 @@ namespace TaskFly.Integra
         public void TaskStartTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/start", null);
         public void TaskStopTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/stop", null);
         public void TransferTask(int taskId, int newUserId) => SendToService("PUT",$"/tasks/{taskId}/transfer/{newUserId}",null);
-
-
     }
 }

@@ -56,7 +56,6 @@ namespace TaskFlySampleAPI
             taskfly.ChangeCustomer(newCustomer);
             taskfly.DeleteCustomer(727);
             var customer1 = taskfly.GetCustomerByID(1);
-
         }
 
         private static void UsersSample()
@@ -136,12 +135,6 @@ namespace TaskFlySampleAPI
 
         private static void TaskSample()
         {
-            var filter = new Dictionary<string, object>
-            {
-                {"Id", 203 }
-            };
-            var task = taskfly.GetTasks(filter);
-
             var phase = taskfly.GetTaskPhases().First();
             var priority = taskfly.GetTaskPriority().First();
             var taskType = taskfly.GetTaskType().First();
@@ -163,10 +156,17 @@ namespace TaskFlySampleAPI
             taskfly.TaskStartTimer(newID);
             taskfly.TaskStopTimer(newID);
 
+            var filter = new Dictionary<string, object>
+            {
+                {"Id", newID }
+            };
+            var task = taskfly.GetTasks(filter);
+
+
+
             var userTransfer = taskfly.GetUsersToTransferTask();
 
             taskfly.TransferTask(newID, userTransfer.First().UserId);
-
         }
     }
 }
