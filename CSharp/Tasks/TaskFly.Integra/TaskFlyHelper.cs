@@ -127,11 +127,12 @@ namespace TaskFly.Integra
         public List<UsersToTransferTask> GetUsersToTransferTask() => CallService<List<UsersToTransferTask>>("/tasks/transfer/users");
         public List<Tasks> GetTasks(Dictionary<string, object> filter)
         {
-            var strFilter = "?";
+            var sb = new StringBuilder("?");
             foreach(var f in filter.ToList())
             {
-                strFilter += f.Key + "=" + f.Value.ToString() + "&";
+                sb.Append($"{f.Key}={f.Value}&");
             }
+            var strFilter = sb.ToString();
             strFilter = strFilter.Substring(0, strFilter.Length - 1);
             return CallService<List<Tasks>>($"/tasks" + strFilter);
         }

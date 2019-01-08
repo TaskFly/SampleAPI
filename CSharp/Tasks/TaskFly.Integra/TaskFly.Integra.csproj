@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Authors>Carlos dos Santos</Authors>
-    <Company>CDS Informatica</Company>
-    <Product>TaskFly</Product>
-    <Description>API for TaskFly</Description>
-    <Copyright>2018 CDS Informática Ltda.</Copyright>
-    <PackageProjectUrl>https://www.gotaskfly.com</PackageProjectUrl>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/40304862?s=400&amp;u=dd2dbe7b6250d09606b45dc897564fd95c4693d3&amp;v=4</PackageIconUrl>
-    <RepositoryUrl>https://www.github.com/taskfly</RepositoryUrl>
-    <PackageTags>task;manager</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <Authors></Authors>
+    <Company></Company>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId />
+    <Version>1.0.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
 
 </Project>
