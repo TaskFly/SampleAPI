@@ -104,7 +104,7 @@ namespace TaskFly.Integra
                     var newType = new { ID = 0 };
                     var obj = JsonConvert.DeserializeAnonymousType(result, newType);
                     ID = obj.ID;
-                    Message = "OK";
+                    if(Message == "") Message = "OK";
                 }
             }
             return ID;
@@ -117,12 +117,24 @@ namespace TaskFly.Integra
         public void DeleteCustomer(int ID) => SendToService("DELETE", $"/customers/{ID}", null);
         public List<Projects> GetProjects() => CallService<List<Projects>>("/projects");
         public int AddProject(Projects project) => SendToService("POST", "/projects", project);
-        public void ChangeProject(Projects project) => SendToService("POST", $"/projects/{project.Id}", project);
+        public void ChangeProject(Projects project) => SendToService("PUT", $"/projects/{project.Id}", project);
         public void DeleteProject(int ID) => SendToService("DELETE", $"/projects/{ID}", null);
         public List<Sectors> GetSectors() => CallService<List<Sectors>>("/sectors");
+        public int AddSector(Sectors sector) => SendToService("POST", "/sectors", sector);
+        public void ChangeSector(Sectors sector) => SendToService("PUT", $"/sectors/{sector.Id}", sector);
+        public void DeleteSector(int ID) => SendToService("DELETE", $"/sectors/{ID}", null);
         public List<TaskPhases> GetTaskPhases() => CallService<List<TaskPhases>>("/taskphases");
+        public int AddPhase(TaskPhases taskPhase) => SendToService("POST", "/taskphases", taskPhase);
+        public void ChangePhase(TaskPhases taskPhase) => SendToService("PUT", $"/taskphases/{taskPhase.Id}", taskPhase);
+        public void DeletePhase(int ID) => SendToService("DELETE", $"/taskphases/{ID}", null);
         public List<TaskPriority> GetTaskPriority() => CallService<List<TaskPriority>>("/taskpriorities");
+        public int AddPriority(TaskPriority taskPriority) => SendToService("POST", "/taskpriorities", taskPriority);
+        public void ChangePriority(TaskPriority taskPriority) => SendToService("PUT", $"/taskpriorities/{taskPriority.Id}", taskPriority);
+        public void DeletePriority(int ID) => SendToService("DELETE", $"/taskpriorities/{ID}", null);
         public List<TaskType> GetTaskType() => CallService<List<TaskType>>("/tasktypes");
+        public int AddTaskType(TaskType taskType) => SendToService("POST", "/tasktypes", taskType);
+        public void ChangeTaskType(TaskType taskType) => SendToService("PUT", $"/tasktypes/{taskType.Id}", taskType);
+        public void DeleteTaskType(int ID) => SendToService("DELETE", $"/tasktypes/{ID}", null);
         public List<Users> GetUsers() => CallService<List<Users>>("/users");
         public List<UsersToTransferTask> GetUsersToTransferTask() => CallService<List<UsersToTransferTask>>("/tasks/transfer/users");
         public List<Tasks> GetTasks(Dictionary<string, object> filter)
@@ -136,11 +148,10 @@ namespace TaskFly.Integra
             strFilter = strFilter.Substring(0, strFilter.Length - 1);
             return CallService<List<Tasks>>($"/tasks" + strFilter);
         }
-
-        public void TransferTask(int taskId, int newUserId)
-        {
-            SendToService("PUT",$"/tasks/{taskId}/transfer/{newUserId}",null);
-        }
+        public int AddTask(Tasks task) => SendToService("POST", "/tasks", task);
+        public void TaskStartTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/start", null);
+        public void TaskStopTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/stop", null);
+        public void TransferTask(int taskId, int newUserId) => SendToService("PUT",$"/tasks/{taskId}/transfer/{newUserId}",null);
 
 
     }
