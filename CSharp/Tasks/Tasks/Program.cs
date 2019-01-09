@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -135,6 +136,7 @@ namespace TaskFlySampleAPI
 
         private static void TaskSample()
         {
+            #region Create Task
             var phase = taskfly.GetTaskPhases().First();
             var priority = taskfly.GetTaskPriority().First();
             var taskType = taskfly.GetTaskType().First();
@@ -152,21 +154,50 @@ namespace TaskFlySampleAPI
                 ProjectId = project.Id
             };
             int newID = taskfly.AddTask(newTask);
+            #endregion
 
+            #region Task Timer
             taskfly.TaskStartTimer(newID);
             taskfly.TaskStopTimer(newID);
+            #endregion
 
+            #region Task Find
             var filter = new Dictionary<string, object>
             {
                 {"Id", newID }
             };
             var task = taskfly.GetTasks(filter);
+            #endregion
 
-
-
+            #region Transfer Task to Another User
             var userTransfer = taskfly.GetUsersToTransferTask();
-
             taskfly.TransferTask(newID, userTransfer.First().UserId);
+            #endregion
+
+            #region Task Comments
+            var taskComments = taskfly.GetTaskComments(newID);
+            var comment = new TaskComment
+            {
+                PhaseId = null,
+                SendToUserId = null,
+                Description = "Commented using API"
+            };
+            taskfly.SendTaskComments(newID, comment);
+            #endregion
+
+            #region Task Attachments
+            var fileName = "TaskFlyImage.png";
+            var fs = new FileStream(fileName, FileMode.Open);
+            byte[] bytearray = new byte[fs.Length];
+            fs.Read(bytearray, 0, (int)fs.Length);
+
+            var attachment = new TaskAttachment
+            {
+                Name = fileName,
+                ByteArrayFile = bytearray
+            };
+            taskfly.SendTaskAttachmment(newID, attachment);
+            #endregion
         }
     }
 }

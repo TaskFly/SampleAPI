@@ -99,7 +99,7 @@ namespace TaskFly.Integra
                     var obj = JsonConvert.DeserializeAnonymousType(result, newType);
                     Message = obj.Message;
                 }
-                if (httpVerb == "POST")
+                if (httpVerb == "POST" && result != "")
                 {
                     var newType = new { ID = 0 };
                     var obj = JsonConvert.DeserializeAnonymousType(result, newType);
@@ -149,8 +149,11 @@ namespace TaskFly.Integra
             return CallService<List<Tasks>>($"/tasks" + strFilter);
         }
         public int AddTask(Tasks task) => SendToService("POST", "/tasks", task);
+        public List<TaskComments> GetTaskComments(int ID) => CallService<List<TaskComments>>($"/tasks/{ID}/comments");
+        public void SendTaskComments(int ID, TaskComment comment) => SendToService("POST", $"/tasks/{ID}/comments", comment);
         public void TaskStartTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/start", null);
         public void TaskStopTimer(int ID) => SendToService("PUT", $"/tasks/{ID}/stop", null);
-        public void TransferTask(int taskId, int newUserId) => SendToService("PUT",$"/tasks/{taskId}/transfer/{newUserId}",null);
+        public void TransferTask(int ID, int newUserId) => SendToService("PUT",$"/tasks/{ID}/transfer/{newUserId}",null);
+        public void SendTaskAttachmment(int ID, TaskAttachment attachment) => SendToService("POST", $"/tasks/{ID}/attachments", attachment);
     }
 }
